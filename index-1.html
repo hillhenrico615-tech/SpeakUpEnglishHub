@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102a43">
+<meta name="description" content="SpeakUp English Hub — practical English learning on your phone.">
+<link rel="manifest" href="manifest.json">
+<title>SpeakUp English Hub</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#102a43;color:#fff;padding:28px 18px;text-align:center}.logo{font-size:27px;font-weight:800}.tag{margin-top:7px}
+main{max-width:760px;margin:auto;padding:16px 16px 90px}.card{background:#fff;border-radius:18px;padding:19px;margin:12px 0;box-shadow:0 4px 16px #0001}
+h2{margin-top:0}.btn{width:100%;border:0;border-radius:12px;padding:14px;margin:8px 0;background:#f2c94c;color:#172033;font-size:16px;font-weight:700}
+.btn.secondary{background:#e8eef5}.page{display:none}.page.active{display:block}.phrase{background:#f4f7fb;padding:12px;border-radius:10px;margin:7px 0}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;padding:7px;display:flex;gap:5px;box-shadow:0 -3px 12px #0002;z-index:5}
+nav button{flex:1;border:0;background:#e8eef5;border-radius:9px;padding:10px 4px;font-weight:700;font-size:12px}
+.success{font-weight:700;margin-top:10px}.small{color:#5b677a;font-size:14px}
+#install{display:none}
+</style>
+</head>
+<body>
+<header><div class="logo">SPEAKUP ENGLISH HUB</div><div class="tag">Learn English. Speak Confidently.</div></header>
+<main>
+<section id="home" class="page active">
+<div class="card"><h2>Welcome 👋</h2><p>Build your English speaking, vocabulary and grammar skills through short practical lessons.</p><button class="btn" onclick="show('lessons')">Start Learning</button><button id="install" class="btn secondary">Install SpeakUp</button></div>
+<div class="card"><h2>🆓 3-Day Free Challenge</h2><p>Day 1: Introduce Yourself<br>Day 2: Talk About Your Day<br>Day 3: Real Conversation</p></div>
+</section>
+<section id="lessons" class="page">
+<div class="card"><h2>Day 1 — Introduce Yourself</h2><p><b>Goal:</b> Speak about yourself confidently for 30–60 seconds.</p>
+<h3>Useful sentences</h3><div class="phrase">My name is ___.</div><div class="phrase">I am from ___.</div><div class="phrase">I live in ___.</div><div class="phrase">I am a student / I work as a ___.</div><div class="phrase">I enjoy ___.</div><div class="phrase">I want to improve my English because ___.</div>
+<h3>Vocabulary</h3><p><b>Confident</b> — feeling comfortable speaking.</p><p><b>Improve</b> — become better.</p><p><b>Practice</b> — repeat something to get better.</p>
+<h3>🎤 Speaking Challenge</h3><p>Record yourself introducing yourself using at least five sentences.</p>
+<button class="btn" onclick="completeLesson()">Mark Day 1 Complete</button><div id="lessonResult" class="success"></div></div>
+<div class="card"><h2>Coming Next</h2><p>Day 2 — Talk About Your Day</p><p>Day 3 — Real Conversation</p></div>
+</section>
+<section id="speaking" class="page"><div class="card"><h2>🎤 Speaking Practice</h2><p>Practice aloud:</p><div class="phrase">“Hello, my name is ___. I am from ___. I enjoy ___.”</div><p class="small">Speak slowly and clearly. Mistakes are part of learning.</p></div></section>
+<section id="quiz" class="page"><div class="card"><h2>📝 Quick Quiz</h2><p>Which sentence is correct?</p>
+<label><input type="radio" name="q1" value="0"> My name are Henry.</label><br><label><input type="radio" name="q1" value="1"> My name is Henry.</label><br><label><input type="radio" name="q1" value="0"> My name am Henry.</label>
+<button class="btn" onclick="checkQuiz()">Check Answer</button><div id="quizResult" class="success"></div></div></section>
+<section id="progress" class="page"><div class="card"><h2>📈 My Progress</h2><p id="progressText">0 lessons completed</p><div class="phrase">Keep practicing every day!</div></div></section>
+</main>
+<nav><button onclick="show('home')">Home</button><button onclick="show('lessons')">Lessons</button><button onclick="show('speaking')">Speaking</button><button onclick="show('quiz')">Quiz</button><button onclick="show('progress')">Progress</button></nav>
+<script>
+let completed=localStorage.getItem('speakup_day1')==='1';
+function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');updateProgress();scrollTo(0,0)}
+function completeLesson(){completed=true;localStorage.setItem('speakup_day1','1');document.getElementById('lessonResult').textContent='✅ Day 1 completed!';updateProgress()}
+function updateProgress(){document.getElementById('progressText').textContent=(completed?1:0)+' lesson'+(completed?'':'s')+' completed'}
+function checkQuiz(){let a=document.querySelector('input[name=q1]:checked');document.getElementById('quizResult').textContent=!a?'Choose an answer first.':a.value==='1'?'✅ Correct!':'❌ Try again.'}
+let deferred;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;document.getElementById('install').style.display='block'});
+document.getElementById('install').onclick=async()=>{if(deferred){deferred.prompt();deferred=null}}
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+updateProgress();
+</script>
+</body></html>
